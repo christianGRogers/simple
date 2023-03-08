@@ -14,7 +14,8 @@ using namespace std;
 //-->2023-02-21[check var causing issues]
 //-->2023-02-27[add arithmatic functonality and intergrate php]
 //-->2023-03-01[car trip lol continue with inline entry functonlity]
-//-->2023-03-07
+//-->2023-03-07[arithmatic and git repo created]
+//-->2023-03-08[add run --]
 //================
 
 //Globals
@@ -36,19 +37,22 @@ string getfile(string fileName){
     read.close();
     return FOO;
 }
-string splitCONSOL(int numlines){
+string splitCONSOL(){
     string input;
     string foo;
-    for(int i =0; i<numlines; i++){
+    while(true){
         getline(cin >> ws, foo);
         input += "-"+foo+"|";
+        if(foo == "run"){
+            break;
+        }
     }
     return input;
 }
 string setUp(){
     string mode;
     if(!(debugMode)){
-    cout<<"Enter read mode(file, inline{neline--numlines}):";
+    cout<<"Enter read mode(file, inline):";
     cin>>mode;
     }
     string foo;
@@ -58,9 +62,7 @@ string setUp(){
         foo = getfile(foo+".simple");
     }
     else if(mode == "inline" || debugMode){
-        int numlines;
-        cin>>numlines;
-        foo = splitCONSOL(numlines);
+        foo = splitCONSOL();
     }
     return foo;
 }
@@ -174,29 +176,30 @@ void intergerO(string c, string a, string b, char opperation){
     if(opperation == '+'){VAL[store] = to_string(temp[0]+temp[1]);}
     else if(opperation == '-'){VAL[store] = to_string(temp[0]-temp[1]);}
     else if(opperation == '*'){VAL[store] = to_string(temp[0]*temp[1]);}
+    else if(opperation == '%'){VAL[store] = to_string((int)temp[0]%(int)temp[1]);}
     else{VAL[store] = to_string(temp[0]/temp[1]);}
 }
 int mCU(string functionLine){
     string temp;
     string product;
     string reactants[2];
-    int i =2;
-    if(functionLine[0] != '~'){
-        return 1;
-    }
+    int i =0;
     while(true){
         if(functionLine[i] == '='){
             break;
         }
         temp += functionLine[i];
         i++;
+        if(i>functionLine.length()){
+            return 0;
+        }
     }
     product = temp;
     temp ="";
     i++;
     char opperation;
     while(true){
-        if(functionLine[i] == '+' || functionLine[i] == '-' || functionLine[i] == '*' || functionLine[i] == '/'){
+        if(functionLine[i] == '+' || functionLine[i] == '-' || functionLine[i] == '*' || functionLine[i] == '/' || functionLine[i] == '%' || i>functionLine.length()){
             opperation = functionLine[i];
             break;
         }
