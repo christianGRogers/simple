@@ -1,0 +1,19 @@
+SIMPLE DOCUMENTATION(V-1.0)
+
+CONSOLE PRINT FUNCTONALITY (print):
+	Simple interfaces with the c++ equivilant cout. Simple uses the syntax print. 
+	For example to print "hello world"; one must use:
+								print"hello world"
+CONSOLE PRINT FUNCTONALITY (VAR):
+	To print stored varible(eg @ temp) use:
+								print temp
+	Take note of the space when printing a VAR and none when direct string.
+CONSOLE VAR FUNCTONALITY:
+	Store any datatype with:
+								VAR name data
+	This example stores data at varable name.
+CONSOLE OPPERAND FUNCTONALITY (~):
+	Perform arithmatic with (*, /, +, -):
+								~ c=a+b
+COMMENTS($):
+	Lines starting with $ wil be ignored by the interpretur.

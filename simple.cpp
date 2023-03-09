@@ -15,7 +15,7 @@ using namespace std;
 //-->2023-02-27[add arithmatic functonality and intergrate php]
 //-->2023-03-01[car trip lol continue with inline entry functonlity]
 //-->2023-03-07[arithmatic and git repo created]
-//-->2023-03-08[add run --]
+//-->2023-03-08[add run --/--continue integration(webMode)]
 //================
 
 //Globals
@@ -25,7 +25,8 @@ string VAL[1000];
 //make sure memSize and the size of pointer ==
 int memSize = 1000;
 int NAMECOUNT = 0;
-bool debugMode = true;
+bool debugMode = false;
+bool isWebMode = true;
 //
 string getfile(string fileName){
     ifstream read(fileName);
@@ -51,12 +52,15 @@ string splitCONSOL(){
 }
 string setUp(){
     string mode;
-    if(!(debugMode)){
+    if(!(debugMode) && !(isWebMode)){
     cout<<"Enter read mode(file, inline):";
     cin>>mode;
     }
     string foo;
-    if(mode =="file" && !(debugMode)){
+    if(isWebMode){
+        foo = getfile("temp.simple");
+    }
+    else if(mode =="file" && !(debugMode)){
         cout<<"Enter file name(.simple filetype auto fills):";
         cin>>foo;
         foo = getfile(foo+".simple");
@@ -91,6 +95,14 @@ bool pCheck(string functionLine){
     return false;
 }
 int pExecute(string FOO){
+    string newLine;
+    if(isWebMode){
+        newLine = "<br>";
+    }
+    else{
+        newLine ="\n";
+    }
+
     char test = '"';
     char test2 = ' ';
     if(FOO[5] == test){
@@ -99,7 +111,7 @@ int pExecute(string FOO){
         bool element = true;
         while(element){
             if(FOO[6+temp] == test){
-                print += "\n";
+                print += newLine;
                 cout<<print;
                 return 0;
             }
@@ -120,7 +132,7 @@ int pExecute(string FOO){
         }
         for(int i =0; i< 1000; i++){
             if(pointer[i] == temp){
-                cout<<VAL[i] +"\n";
+                cout<<VAL[i] + newLine;
                 return 0;
             }
         }
