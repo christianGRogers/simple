@@ -2,7 +2,7 @@
 #include<fstream>
 #include<string>
 #include <typeinfo>
-
+#include <cmath>
 using namespace std;
 
 //================
@@ -16,17 +16,21 @@ using namespace std;
 //-->2023-03-01[car trip lol continue with inline entry functonlity]
 //-->2023-03-07[arithmatic and git repo created]
 //-->2023-03-08[add run --/--continue integration(webMode)]
+//-->2023-03-09[fix webmode inf]
+//-->2023-03-10[locked out(core dump issues)]
 //================
 
 //Globals
 int pos[1000];
 string pointer[1000];
 string VAL[1000];
+double VALopp[1000];
 //make sure memSize and the size of pointer ==
 int memSize = 1000;
 int NAMECOUNT = 0;
 bool debugMode = false;
-bool isWebMode = true;
+bool isWebMode = false;
+string key = "@8901262g2h2jk21";
 //
 string getfile(string fileName){
     ifstream read(fileName);
@@ -131,8 +135,15 @@ int pExecute(string FOO){
             i++;
         }
         for(int i =0; i< 1000; i++){
+            string out;
             if(pointer[i] == temp){
-                cout<<VAL[i] + newLine;
+                if(VAL[i] == key){
+                    cout<<VALopp[i];
+                }
+                else{
+                    cout<<VAL[i];
+                }
+                cout<<newLine;
                 return 0;
             }
         }
@@ -179,17 +190,56 @@ int vExecute(string FOO){
 void intergerO(string c, string a, string b, char opperation){
     double temp[2];
     int store;
-    
+    bool VARa = false;
+    bool VARb = false;
     for(int i =0; i<memSize; i++){
-        if(a == pointer[i]){temp[0] = stod(VAL[i]);}
-        if(b == pointer[i]){temp[1]= stod(VAL[i]);}
-        if(c == pointer[i]){store = i;}
+        if(a == pointer[i] && VAL[i] != key){
+            temp[0] = stod(VAL[i]);
+            VARa = true;
+        }
+        else{
+            temp[0] = VALopp[i];
+        }
+        if(b == pointer[i] && VAL[i] != key){
+            if(VAL[i] == "")
+            temp[1]= stod(VAL[i]);
+            VARb = true;
+        }
+        else{
+            temp[1] = VALopp[i];
+        }
+        if(c == pointer[i]){
+            store = i;
+        }
     }
-    if(opperation == '+'){VAL[store] = to_string(temp[0]+temp[1]);}
-    else if(opperation == '-'){VAL[store] = to_string(temp[0]-temp[1]);}
-    else if(opperation == '*'){VAL[store] = to_string(temp[0]*temp[1]);}
-    else if(opperation == '%'){VAL[store] = to_string((int)temp[0]%(int)temp[1]);}
-    else{VAL[store] = to_string(temp[0]/temp[1]);}
+    if(!(VARa)){temp[0] = stod(a);}
+    if(!(VARb)){temp[1] = stod(b);}
+    int tempINT[2] = {(int)temp[0], (int)temp[1]};
+
+    if(opperation == '+'){
+        double BAR  = round((temp[0]+temp[1]));
+        VALopp[store] = BAR;
+        VAL[store] = key;
+    }
+    else if(opperation == '-'){
+        double BAR  = round((temp[0]*temp[1])*100)/100.0;
+        VALopp[store] = BAR;
+        VAL[store] = key;
+    }
+    else if(opperation == '*'){
+        double BAR = round((temp[0]*temp[1])*100)/100.0;
+        VALopp[store] = BAR;
+        VAL[store] = key;
+    }
+    else if(opperation == '%'){
+        VALopp[store] = tempINT[0]%tempINT[1];
+        VAL[store] = key;
+    }
+    else{
+        double BAR = round((temp[0]/temp[1])*100)/100.0;
+        VALopp[store] = BAR;
+        VAL[store] = key;
+    }
 }
 int mCU(string functionLine){
     string temp;
@@ -232,30 +282,74 @@ int mCU(string functionLine){
     intergerO(product, reactants[0], reactants[1], opperation);
     return 0;
 }
-
-void funcDeclare(string dataI, int numLines){
+bool fCheck(string data){
+    string lineToString[3];
+    for(int i = 0; i< 3; i++){
+        string temp;
+        lineToString[i] = data[i];
+    }
+    string temp = lineToString[0] + lineToString[1] + lineToString[2];
+    if(temp == "for"){
+        return true;
+    }
+    return false;
+}
+int fExecute(string data){
+    return 0;
+}
+class loopExecute {
+    public:
+        string data;
+        int Start;
+        int End;
+        int step;
+        string iName;
+        loopExecute(){
+            for(int i = Start; i<End; i+=step){
+                
+            }
+        }
+};
+class callLine {
+    public:
+        string blockReturn(int currentLine, string dataI){
+            string FOO;
+            for(int x = pos[currentLine]+1; x<(pos[currentLine+1]);x++){
+                FOO += dataI[x];
+            }
+            return FOO;
+        }
+};
+class executeLine{
+    public:
+        void callBack(string currentData){
+            //check all possible functions
+            bool isPrint = pCheck(currentData);
+            bool isVAR = vCheck(currentData);
+            bool isFOR = fCheck(currentData);
+            //expresion check/execute
+            int isM = mCU(currentData);
+            //fuction execute
+            if(isPrint){ int p = pExecute(currentData);}
+            else if(isVAR){ int v = vExecute(currentData);}
+            else if(isFOR){ 
+                int f = fExecute(currentData);
+            }
+        }
+};
+void callBlocks(string dataI, int numLines){
     for(int i = 0; i<numLines; i+=2){
-        string FOO;
-        for(int x = pos[i]+1; x<(pos[i+1]);x++){
-            FOO += dataI[x];
-        }
-        //check all possible functions
-        bool isPrint = pCheck(FOO);
-        bool isVAR = vCheck(FOO);
-        //expresion check/execute
-        int isM = mCU(FOO);
-        //fuction execute
-        if(isPrint){
-            int p = pExecute(FOO);
-        }
-        else if(isVAR){
-            int v = vExecute(FOO);
-        }
+        //current data splice
+        callLine currentStack;
+        string FOO = currentStack.blockReturn(i, dataI);
+        executeLine currentInstruction;
+        currentInstruction.callBack(FOO);
+        
     }
 }
 int main(){
     string data = setUp();
     int Lines = splice(data);
-    funcDeclare(data, Lines);
+    callBlocks(data, Lines);
     return 0;
 }

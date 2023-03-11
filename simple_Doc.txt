@@ -1,19 +1,26 @@
 SIMPLE DOCUMENTATION(V-1.0)
 
-CONSOLE PRINT FUNCTONALITY (print):
-	Simple interfaces with the c++ equivilant cout. Simple uses the syntax print. 
+CONSOLE PRINT FUNCTIONALITY (print):
+	Simple interfaces with the c++ equivalent cout. Simple uses the syntax print. 
 	For example to print "hello world"; one must use:
 								print"hello world"
-CONSOLE PRINT FUNCTONALITY (VAR):
-	To print stored varible(eg @ temp) use:
+CONSOLE PRINT FUNCTIONALITY (VAR):
+	To print stored variable(eg @ temp) use:
 								print temp
 	Take note of the space when printing a VAR and none when direct string.
 CONSOLE VAR FUNCTONALITY:
 	Store any datatype with:
 								VAR name data
-	This example stores data at varable name.
+	This example stores data at variable name.
 CONSOLE OPPERAND FUNCTONALITY (~):
-	Perform arithmatic with (*, /, +, -):
-								~ c=a+b
+	Perform arithmetic with (*, /, +, -):
+								c=a+b
+								c=5*6
+								
 COMMENTS($):
-	Lines starting with $ wil be ignored by the interpretur.
+	Lines starting with $ will be ignored by the interpreter.
+FOR(for):
+	For loop executed in format:
+								for start-increment>end(i)(
+								$code
+								)
