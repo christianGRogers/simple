@@ -18,9 +18,9 @@ using namespace std;
 //-->2023-03-08[add run --/--continue integration(webMode)]
 //-->2023-03-09[fix webmode inf]
 //-->2023-03-10[locked out(core dump issues)]
+//-->2023-03-11[organize classes and add for]{decleration order issue start fix at 324}
 //================
-
-//Globals
+//Globals///////////////////////////
 int pos[1000];
 string pointer[1000];
 string VAL[1000];
@@ -29,9 +29,13 @@ double VALopp[1000];
 int memSize = 1000;
 int NAMECOUNT = 0;
 bool debugMode = false;
-bool isWebMode = false;
+bool isWebMode = true;
 string key = "@8901262g2h2jk21";
-//
+int Lines;
+int currentLineG;
+string forTemp;
+string dataRAW;
+////////////////////////////////////
 string getfile(string fileName){
     ifstream read(fileName);
     string dataS;
@@ -197,7 +201,7 @@ void intergerO(string c, string a, string b, char opperation){
             temp[0] = stod(VAL[i]);
             VARa = true;
         }
-        else{
+        else if(a == pointer[i] && VAL[i] == key){
             temp[0] = VALopp[i];
         }
         if(b == pointer[i] && VAL[i] != key){
@@ -205,7 +209,7 @@ void intergerO(string c, string a, string b, char opperation){
             temp[1]= stod(VAL[i]);
             VARb = true;
         }
-        else{
+        else if(b == pointer[i] && VAL[i] == key){
             temp[1] = VALopp[i];
         }
         if(c == pointer[i]){
@@ -290,32 +294,17 @@ bool fCheck(string data){
     }
     string temp = lineToString[0] + lineToString[1] + lineToString[2];
     if(temp == "for"){
+        forTemp = data;
         return true;
     }
     return false;
 }
-int fExecute(string data){
-    return 0;
-}
-class loopExecute {
-    public:
-        string data;
-        int Start;
-        int End;
-        int step;
-        string iName;
-        loopExecute(){
-            for(int i = Start; i<End; i+=step){
-                
-            }
-        }
-};
 class callLine {
     public:
-        string blockReturn(int currentLine, string dataI){
+        string blockReturn(int Line){
             string FOO;
-            for(int x = pos[currentLine]+1; x<(pos[currentLine+1]);x++){
-                FOO += dataI[x];
+            for(int x = pos[Line]+1; x<(pos[Line+1]);x++){
+                FOO += dataRAW[x];
             }
             return FOO;
         }
@@ -332,24 +321,66 @@ class executeLine{
             //fuction execute
             if(isPrint){ int p = pExecute(currentData);}
             else if(isVAR){ int v = vExecute(currentData);}
-            else if(isFOR){ 
-                int f = fExecute(currentData);
-            }
+            //else if(isFOR){ int f = fExecute(currentData);}
         }
 };
-void callBlocks(string dataI, int numLines){
-    for(int i = 0; i<numLines; i+=2){
-        //current data splice
-        callLine currentStack;
-        string FOO = currentStack.blockReturn(i, dataI);
-        executeLine currentInstruction;
-        currentInstruction.callBack(FOO);
-        
+void callBlocks(int Line){
+    callLine currentStack;
+    string FOO = currentStack.blockReturn(Line);
+    executeLine currentInstruction;
+    currentInstruction.callBack(FOO); 
+}
+class loopExecute {
+    public:
+        void loop(int Start,int End,int step, string iName){
+            currentLineG++;
+            int codeLineStart = currentLineG;
+            int temp;
+            for(int a = Start; a<End; a+=step){
+                while(true){
+                    codeLineStart++;
+                    callBlocks(codeLineStart);
+                    callLine testEnd;
+                    string testE = testEnd.blockReturn(codeLineStart);
+                    if(testE == "]"){
+                        temp = codeLineStart;
+                        codeLineStart = currentLineG;
+                    }
+                    break;
+                }
+            }
+            currentLineG = temp;
+        }
+};
+int fExecute(string data){
+
+    ///for start-increment>end(i)[
+    int part = 0;
+    string start;
+    string stop;
+    string increment;
+    string iName;
+
+    for(int i =4; i<forTemp.length()-2; i++){
+        if(forTemp[i] == '-' ||forTemp[i]== '>'|| forTemp[i]== '('){ part++;}
+        if(part == 0){ start +=forTemp[i];}
+        else if(part == 1){ increment+=forTemp[i];}
+        else if(part == 2){ stop +=forTemp[i];}
+        else if(part == 3){ iName +=forTemp[i];}
     }
+    loopExecute loopC;
+    loopC.loop(stoi(start), stoi(stop), stoi(increment), iName);
+    return 1;
 }
 int main(){
-    string data = setUp();
-    int Lines = splice(data);
-    callBlocks(data, Lines);
+    dataRAW = setUp();
+    Lines = splice(dataRAW);
+
+    for(int i = 0; i<Lines; i++){
+        currentLineG = i;
+        callBlocks(i);
+        i = currentLineG;
+    }
+    callBlocks(Lines);
     return 0;
 }
