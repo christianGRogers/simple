@@ -1,5 +1,7 @@
 SIMPLE DOCUMENTATION(V-1.0)
-
+(IMPORTANT NOTE)
+	Forbiden characters:
+		'@', '|'
 CONSOLE PRINT FUNCTIONALITY (print):
 	Simple interfaces with the c++ equivalent cout. Simple uses the syntax print. 
 	For example to print "hello world"; one must use:
@@ -21,6 +23,7 @@ COMMENTS($):
 	Lines starting with $ will be ignored by the interpreter.
 FOR(for):
 	For loop executed in format:
-								for start-increment>end(i)[
+								for start~increment>end(i)[
 								$code
 								]
+

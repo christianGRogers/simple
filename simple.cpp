@@ -4,7 +4,6 @@
 #include <typeinfo>
 #include <cmath>
 using namespace std;
-
 //================
 //MASTER REPO
 //created :2023-02-17[read file with print functonality]{error pCheck(43) non congruent value(should == print) but  == !┐÷ char to string conversion error suspected}
@@ -19,6 +18,7 @@ using namespace std;
 //-->2023-03-09[fix webmode inf]
 //-->2023-03-10[locked out(core dump issues)]
 //-->2023-03-11[organize classes and add for]{decleration order issue start fix at 324}
+//-->2023-03-12[]
 //================
 //Globals///////////////////////////
 int pos[1000];
@@ -28,20 +28,22 @@ double VALopp[1000];
 //make sure memSize and the size of pointer ==
 int memSize = 1000;
 int NAMECOUNT = 0;
-bool debugMode = false;
-bool isWebMode = true;
+bool debugMode = true;
+bool isWebMode = false;
 string key = "@8901262g2h2jk21";
 int Lines;
 int currentLineG;
 string forTemp;
 string dataRAW;
+string intermediateS;
+bool intermediateB = false;
 ////////////////////////////////////
 string getfile(string fileName){
     ifstream read(fileName);
     string dataS;
     string FOO;
     while(getline (read, dataS)){
-        FOO += "-" + dataS + "|";
+        FOO += "@" + dataS + "|";
     }
     read.close();
     return FOO;
@@ -51,7 +53,7 @@ string splitCONSOL(){
     string foo;
     while(true){
         getline(cin >> ws, foo);
-        input += "-"+foo+"|";
+        input += "@"+foo+"|";
         if(foo == "run"){
             break;
         }
@@ -60,20 +62,20 @@ string splitCONSOL(){
 }
 string setUp(){
     string mode;
+    string foo;
     if(!(debugMode) && !(isWebMode)){
     cout<<"Enter read mode(file, inline):";
     cin>>mode;
     }
-    string foo;
-    if(isWebMode){
+    else if(isWebMode || debugMode){
         foo = getfile("temp.simple");
     }
-    else if(mode =="file" && !(debugMode)){
+    else if(mode =="file"){
         cout<<"Enter file name(.simple filetype auto fills):";
         cin>>foo;
         foo = getfile(foo+".simple");
     }
-    else if(mode == "inline" || debugMode){
+    else if(mode == "inline"){
         foo = splitCONSOL();
     }
     return foo;
@@ -81,7 +83,7 @@ string setUp(){
 int splice(string dataI){
     int BAR =0;
     char test1 = '|';
-    char test2 = '-';
+    char test2 = '@';
     for(int i =0; i<dataI.length(); i++){
         if(dataI[i] == test1 || dataI[i] == test2){
             pos[BAR] = i;
@@ -239,6 +241,10 @@ void intergerO(string c, string a, string b, char opperation){
         VALopp[store] = tempINT[0]%tempINT[1];
         VAL[store] = key;
     }
+    else if(opperation == 'n'){
+        VALopp[store] = tempINT[0];
+        VAL[store] = key;
+    }
     else{
         double BAR = round((temp[0]/temp[1])*100)/100.0;
         VALopp[store] = BAR;
@@ -265,7 +271,13 @@ int mCU(string functionLine){
     i++;
     char opperation;
     while(true){
-        if(functionLine[i] == '+' || functionLine[i] == '-' || functionLine[i] == '*' || functionLine[i] == '/' || functionLine[i] == '%' || i>functionLine.length()){
+        if(i>functionLine.length()){
+            opperation ='n';
+            reactants[0] = temp;
+            intergerO(product, reactants[0], "1", opperation);
+            return 1;
+        }
+        else if(functionLine[i] == '+' || functionLine[i] == '-' || functionLine[i] == '*' || functionLine[i] == '/' || functionLine[i] == '%'){
             opperation = functionLine[i];
             break;
         }
@@ -284,7 +296,7 @@ int mCU(string functionLine){
     }
     reactants[1] = temp;
     intergerO(product, reactants[0], reactants[1], opperation);
-    return 0;
+    return 1;
 }
 bool fCheck(string data){
     string lineToString[3];
@@ -312,6 +324,7 @@ class callLine {
 class executeLine{
     public:
         void callBack(string currentData){
+            intermediateS = currentData;
             //check all possible functions
             bool isPrint = pCheck(currentData);
             bool isVAR = vCheck(currentData);
@@ -321,7 +334,7 @@ class executeLine{
             //fuction execute
             if(isPrint){ int p = pExecute(currentData);}
             else if(isVAR){ int v = vExecute(currentData);}
-            //else if(isFOR){ int f = fExecute(currentData);}
+            else if(isFOR){ intermediateB =true;}
         }
 };
 void callBlocks(int Line){
@@ -336,33 +349,37 @@ class loopExecute {
             currentLineG++;
             int codeLineStart = currentLineG;
             int temp;
+            temp = vExecute("VAR "+iName+" "+ to_string(Start));
             for(int a = Start; a<End; a+=step){
+                temp = mCU(iName+"="+to_string(a));
                 while(true){
                     codeLineStart++;
-                    callBlocks(codeLineStart);
                     callLine testEnd;
                     string testE = testEnd.blockReturn(codeLineStart);
                     if(testE == "]"){
                         temp = codeLineStart;
                         codeLineStart = currentLineG;
+                        break;
                     }
-                    break;
+                    callBlocks(codeLineStart);
                 }
             }
             currentLineG = temp;
+            intermediateB = false;
         }
 };
 int fExecute(string data){
-
-    ///for start-increment>end(i)[
+    ///for start~increment>end(i)[
     int part = 0;
     string start;
     string stop;
     string increment;
     string iName;
-
     for(int i =4; i<forTemp.length()-2; i++){
-        if(forTemp[i] == '-' ||forTemp[i]== '>'|| forTemp[i]== '('){ part++;}
+        if(forTemp[i] == '~' ||forTemp[i]== '>'|| forTemp[i]== '('){
+            part++;
+            i++;
+        }
         if(part == 0){ start +=forTemp[i];}
         else if(part == 1){ increment+=forTemp[i];}
         else if(part == 2){ stop +=forTemp[i];}
@@ -379,6 +396,8 @@ int main(){
     for(int i = 0; i<Lines; i++){
         currentLineG = i;
         callBlocks(i);
+        //a crude fix to bad planing rather than a large rewrite
+        if(intermediateB){fExecute(intermediateS);}
         i = currentLineG;
     }
     callBlocks(Lines);
