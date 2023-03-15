@@ -1,7 +1,7 @@
 SIMPLE DOCUMENTATION(V-1.0)
 (IMPORTANT NOTE)
 	Forbiden characters:
-		'@', '|'
+		'&', '|'
 CONSOLE PRINT FUNCTIONALITY (print):
 	Simple interfaces with the c++ equivalent cout. Simple uses the syntax print. 
 	For example to print "hello world"; one must use:

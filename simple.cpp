@@ -19,6 +19,8 @@ using namespace std;
 //-->2023-03-10[locked out(core dump issues)]
 //-->2023-03-11[organize classes and add for]{decleration order issue start fix at 324}
 //-->2023-03-12[]
+//-->2023-03-13[got for working with php integration]{error with code stack return at end of for loop}
+//-->2023-03-15[]
 //================
 //Globals///////////////////////////
 int pos[1000];
@@ -28,8 +30,8 @@ double VALopp[1000];
 //make sure memSize and the size of pointer ==
 int memSize = 1000;
 int NAMECOUNT = 0;
-bool debugMode = true;
-bool isWebMode = false;
+bool debugMode = false;
+bool isWebMode = true;
 string key = "@8901262g2h2jk21";
 int Lines;
 int currentLineG;
@@ -43,7 +45,7 @@ string getfile(string fileName){
     string dataS;
     string FOO;
     while(getline (read, dataS)){
-        FOO += "@" + dataS + "|";
+        FOO += "&" + dataS + "|";
     }
     read.close();
     return FOO;
@@ -53,7 +55,7 @@ string splitCONSOL(){
     string foo;
     while(true){
         getline(cin >> ws, foo);
-        input += "@"+foo+"|";
+        input += "&"+foo+"|";
         if(foo == "run"){
             break;
         }
@@ -83,7 +85,7 @@ string setUp(){
 int splice(string dataI){
     int BAR =0;
     char test1 = '|';
-    char test2 = '@';
+    char test2 = '&';
     for(int i =0; i<dataI.length(); i++){
         if(dataI[i] == test1 || dataI[i] == test2){
             pos[BAR] = i;
@@ -105,6 +107,8 @@ bool pCheck(string functionLine){
     return false;
 }
 int pExecute(string FOO){
+    int modeDIFF = 1;
+    if(isWebMode){ modeDIFF = 2;}
     string newLine;
     if(isWebMode){
         newLine = "<br>";
@@ -112,7 +116,6 @@ int pExecute(string FOO){
     else{
         newLine ="\n";
     }
-
     char test = '"';
     char test2 = ' ';
     if(FOO[5] == test){
@@ -134,7 +137,7 @@ int pExecute(string FOO){
         bool isNAME = true;
         int i =6;
         while(isNAME){
-            if(i==(FOO.length()-1)){
+            if(i==(FOO.length()-modeDIFF)){
                 isNAME = false;
             }
             temp += FOO[i];
@@ -375,7 +378,10 @@ int fExecute(string data){
     string stop;
     string increment;
     string iName;
-    for(int i =4; i<forTemp.length()-2; i++){
+    //newline is interpreted differently via php
+    int modeDIFF = 2;
+    if(isWebMode){ modeDIFF = 3;}
+    for(int i =4; i<forTemp.length()-modeDIFF; i++){
         if(forTemp[i] == '~' ||forTemp[i]== '>'|| forTemp[i]== '('){
             part++;
             i++;
@@ -383,7 +389,9 @@ int fExecute(string data){
         if(part == 0){ start +=forTemp[i];}
         else if(part == 1){ increment+=forTemp[i];}
         else if(part == 2){ stop +=forTemp[i];}
-        else if(part == 3){ iName +=forTemp[i];}
+        else if(part == 3){ 
+            iName +=forTemp[i];
+        }
     }
     loopExecute loopC;
     loopC.loop(stoi(start), stoi(stop), stoi(increment), iName);

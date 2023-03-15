@@ -1,4 +1,3 @@
 for 0~1>10(i)[
-for 0~1>3(a)[
-print"hello"
+print i
 ]
