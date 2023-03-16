@@ -1,3 +1,5 @@
+print"hello"
 for 0~1>10(i)[
 print i
 ]
+print"hehe"

@@ -20,7 +20,8 @@ using namespace std;
 //-->2023-03-11[organize classes and add for]{decleration order issue start fix at 324}
 //-->2023-03-12[]
 //-->2023-03-13[got for working with php integration]{error with code stack return at end of for loop}
-//-->2023-03-15[]
+//-->2023-03-15[fix one issue and discover another (start with currentLineG's use int the loop execute class)]
+//-->2023-03-15[fix line return after loop and add hash map for memory]{logic error 372}
 //================
 //Globals///////////////////////////
 int pos[1000];
@@ -30,15 +31,19 @@ double VALopp[1000];
 //make sure memSize and the size of pointer ==
 int memSize = 1000;
 int NAMECOUNT = 0;
-bool debugMode = false;
-bool isWebMode = true;
+//mode selector//
+bool debugMode = true;
+bool isWebMode = false;
+//
 string key = "@8901262g2h2jk21";
 int Lines;
 int currentLineG;
-string forTemp;
 string dataRAW;
+//for loop globlas that handel inderpreture distortion of code block
+string forTemp;
 string intermediateS;
 bool intermediateB = false;
+bool isLoop = false;
 ////////////////////////////////////
 string getfile(string fileName){
     ifstream read(fileName);
@@ -94,6 +99,12 @@ int splice(string dataI){
     }
     return BAR;
 }
+class memory{
+    public:
+        void initalizeHashMap(int size){
+
+        }
+};
 bool pCheck(string functionLine){
     string lineToString[5];
     for(int i = 0; i< 5; i++){
@@ -107,8 +118,8 @@ bool pCheck(string functionLine){
     return false;
 }
 int pExecute(string FOO){
-    int modeDIFF = 1;
-    if(isWebMode){ modeDIFF = 2;}
+    int modeDIFF = 0;
+    if(isLoop && isWebMode){ modeDIFF = 1;}
     string newLine;
     if(isWebMode){
         newLine = "<br>";
@@ -121,8 +132,7 @@ int pExecute(string FOO){
     if(FOO[5] == test){
         int temp=0;
         string print;
-        bool element = true;
-        while(element){
+        while(true){
             if(FOO[6+temp] == test){
                 print += newLine;
                 cout<<print;
@@ -134,11 +144,10 @@ int pExecute(string FOO){
     }
     else if(FOO[5] == test2){
         string temp;
-        bool isNAME = true;
         int i =6;
-        while(isNAME){
-            if(i==(FOO.length()-modeDIFF)){
-                isNAME = false;
+        while(true){
+            if(i>=(FOO.length()-modeDIFF)){//-modeDiff?
+                break;
             }
             temp += FOO[i];
             i++;
@@ -349,6 +358,7 @@ void callBlocks(int Line){
 class loopExecute {
     public:
         void loop(int Start,int End,int step, string iName){
+            isLoop = true;
             currentLineG++;
             int codeLineStart = currentLineG;
             int temp;
@@ -356,7 +366,6 @@ class loopExecute {
             for(int a = Start; a<End; a+=step){
                 temp = mCU(iName+"="+to_string(a));
                 while(true){
-                    codeLineStart++;
                     callLine testEnd;
                     string testE = testEnd.blockReturn(codeLineStart);
                     if(testE == "]"){
@@ -364,11 +373,13 @@ class loopExecute {
                         codeLineStart = currentLineG;
                         break;
                     }
+                    codeLineStart++;
                     callBlocks(codeLineStart);
                 }
             }
             currentLineG = temp;
             intermediateB = false;
+            isLoop = false;
         }
 };
 int fExecute(string data){
@@ -400,7 +411,6 @@ int fExecute(string data){
 int main(){
     dataRAW = setUp();
     Lines = splice(dataRAW);
-
     for(int i = 0; i<Lines; i++){
         currentLineG = i;
         callBlocks(i);
@@ -408,6 +418,5 @@ int main(){
         if(intermediateB){fExecute(intermediateS);}
         i = currentLineG;
     }
-    callBlocks(Lines);
     return 0;
 }
