@@ -20,8 +20,9 @@ using namespace std;
 //-->2023-03-11[organize classes and add for]{decleration order issue start fix at 324}
 //-->2023-03-12[]
 //-->2023-03-13[got for working with php integration]{error with code stack return at end of for loop}
-//-->2023-03-15[fix one issue and discover another (start with currentLineG's use int the loop execute class)]
+//-->2023-03-14[fix one issue and discover another (start with currentLineG's use int the loop execute class)]
 //-->2023-03-15[fix line return after loop and add hash map for memory]{logic error 372}
+//-->2023-03-16[]
 //================
 //Globals///////////////////////////
 int pos[1000];
@@ -101,7 +102,9 @@ int splice(string dataI){
 }
 class memory{
     public:
-        void initalizeHashMap(int size){
+        void initalizeHashMap(string key, string val1, double val2){
+            int index = (int)((char)key);
+            cout<<index;
 
         }
 };
@@ -323,6 +326,7 @@ bool fCheck(string data){
     }
     return false;
 }
+//when calling lines(return line data) multiply numlines*2 and index at even integers starting at 0
 class callLine {
     public:
         string blockReturn(int Line){
@@ -355,29 +359,31 @@ void callBlocks(int Line){
     executeLine currentInstruction;
     currentInstruction.callBack(FOO); 
 }
+//fix logic so cuurentLineG is correct at end of loop
 class loopExecute {
     public:
         void loop(int Start,int End,int step, string iName){
             isLoop = true;
-            currentLineG++;
-            int codeLineStart = currentLineG;
+            currentLineG+=2;
+            int codeLineStart;
             int temp;
             temp = vExecute("VAR "+iName+" "+ to_string(Start));
             for(int a = Start; a<End; a+=step){
                 temp = mCU(iName+"="+to_string(a));
+                codeLineStart = currentLineG;
                 while(true){
                     callLine testEnd;
                     string testE = testEnd.blockReturn(codeLineStart);
                     if(testE == "]"){
                         temp = codeLineStart;
-                        codeLineStart = currentLineG;
+                        
                         break;
                     }
-                    codeLineStart++;
                     callBlocks(codeLineStart);
+                    codeLineStart+=2;
                 }
             }
-            currentLineG = temp;
+            currentLineG = temp+2;
             intermediateB = false;
             isLoop = false;
         }
@@ -411,12 +417,13 @@ int fExecute(string data){
 int main(){
     dataRAW = setUp();
     Lines = splice(dataRAW);
-    for(int i = 0; i<Lines; i++){
-        currentLineG = i;
+    for(int i = 0; i<Lines; i+=2){
         callBlocks(i);
-        //a crude fix to bad planing rather than a large rewrite
-        if(intermediateB){fExecute(intermediateS);}
-        i = currentLineG;
+        if(intermediateB){ 
+            currentLineG = i;
+            int temp = fExecute(intermediateS);
+            i = currentLineG-2;
+        }
     }
-    return 0;
+    return 1;
 }
