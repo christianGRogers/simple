@@ -22,7 +22,8 @@ using namespace std;
 //-->2023-03-13[got for working with php integration]{error with code stack return at end of for loop}
 //-->2023-03-14[fix one issue and discover another (start with currentLineG's use int the loop execute class)]
 //-->2023-03-15[fix line return after loop and add hash map for memory]{logic error 372}
-//-->2023-03-16[]
+//-->2023-03-16[return line fixed]
+//-->2023-03-17[]
 //================
 //Globals///////////////////////////
 int pos[1000];
