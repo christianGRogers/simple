@@ -1,6 +1,2 @@
-print"hello"
-for 0~1>10(i)[
-print i
-print"hallo"
-]
-print"hehe"
+VAR a hehe
+print a

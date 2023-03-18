@@ -14,8 +14,8 @@ CONSOLE VAR FUNCTONALITY:
 	Store any datatype with:
 								VAR name data
 	This example stores data at variable name.
-CONSOLE OPPERAND FUNCTONALITY (~):
-	Perform arithmetic with (*, /, +, -):
+CONSOLE OPPERAND FUNCTONALITY:
+	Perform arithmetic with (*, /, +, -, %):
 								c=a+b
 								c=5*6
 								
@@ -26,4 +26,15 @@ FOR(for):
 								for start~increment>end(i)[
 								$code
 								]
-
+	Start increment and end are only acepted as integers and are automaticly rounded down.
+IF LOGIC(if)
+	Executes expresion if bool is true:
+								if(true)[
+								$code
+								]
+								eif(true)[
+								$code
+								]
+								else[
+								$code
+								]

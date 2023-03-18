@@ -26,16 +26,16 @@ using namespace std;
 //-->2023-03-17[]
 //================
 //Globals///////////////////////////
-int pos[1000];
-string pointer[1000];
-string VAL[1000];
-double VALopp[1000];
+int pos[1143];
+string pointer[1143];
+string VAL[1143];
+double VALopp[1143];
 //make sure memSize and the size of pointer ==
-int memSize = 1000;
+int memSize = 1143;
 int NAMECOUNT = 0;
 //mode selector//
-bool debugMode = true;
-bool isWebMode = false;
+bool debugMode = false;
+bool isWebMode = true;
 //
 string key = "@8901262g2h2jk21";
 int Lines;
@@ -52,6 +52,7 @@ string getfile(string fileName){
     string dataS;
     string FOO;
     while(getline (read, dataS)){
+        dataS.erase(dataS.find_last_not_of(" \n\r\t")+1);
         FOO += "&" + dataS + "|";
     }
     read.close();
@@ -62,6 +63,7 @@ string splitCONSOL(){
     string foo;
     while(true){
         getline(cin >> ws, foo);
+        foo.erase(foo.find_last_not_of(" \n\r\t")+1);
         input += "&"+foo+"|";
         if(foo == "run"){
             break;
@@ -103,10 +105,34 @@ int splice(string dataI){
 }
 class memory{
     public:
-        void initalizeHashMap(string key, string val1, double val2){
-            int index = (int)((char)key);
-            cout<<index;
-
+        string key;
+        int conversion(){
+            int keyConversion;
+            for(int i =0; i<3; i++){
+                if(i>key.length()){ break;}
+                keyConversion += (int)key[i];
+            }
+            return keyConversion*3;
+        }
+        int addItemToMem(){
+            int keyConversion = conversion();
+            for(int i = keyConversion; i<memSize-keyConversion;i++){
+                if(pointer[i] == "" ||  pointer[i] == key){
+                    pointer[i] = key;
+                    cout<<i;
+                    return i;
+                }
+            }
+            return memSize+10;
+        }
+        int findItemInMem(){
+            int keyConversion = conversion();
+            for(int i = keyConversion; i<memSize-keyConversion;i++){
+                if(pointer[i] == key){
+                    return i;
+                }
+            }
+            cout<<"{Element "+ key+" has not been declared}";
         }
 };
 bool pCheck(string functionLine){
@@ -123,7 +149,7 @@ bool pCheck(string functionLine){
 }
 int pExecute(string FOO){
     int modeDIFF = 0;
-    if(isLoop && isWebMode){ modeDIFF = 1;}
+    //if(isLoop && isWebMode){ modeDIFF = 1;}
     string newLine;
     if(isWebMode){
         newLine = "<br>";
@@ -186,28 +212,31 @@ bool vCheck(string functionLine){
 }
 int vExecute(string FOO){
     char test = ' ';
-    string temp;
+    string temp[2];
     int i =4;
     while(true){
         if(FOO[i]==test){
             break;
         }
-        temp += FOO[i];
+        temp[0] += FOO[i];
         i++;
     }
-    pointer[NAMECOUNT] =temp;
-    temp = "";
+    pointer[NAMECOUNT] =temp[0];
     i++;
     while(true){
-        temp += FOO[i];
+        temp[1] += FOO[i];
         if(i>=FOO.length()-1){
             break;
         }
         i++;
     }
-    VAL[NAMECOUNT] = temp;
-    NAMECOUNT ++;
-    return 0;
+    memory add;
+    add.key = temp[0];
+    int index = add.addItemToMem();
+    VAL[index] = temp[1];
+    // VAL[NAMECOUNT] = temp;
+    // NAMECOUNT ++;
+    return 1;
 }
 void intergerO(string c, string a, string b, char opperation){
     double temp[2];
@@ -237,7 +266,6 @@ void intergerO(string c, string a, string b, char opperation){
     if(!(VARa)){temp[0] = stod(a);}
     if(!(VARb)){temp[1] = stod(b);}
     int tempINT[2] = {(int)temp[0], (int)temp[1]};
-
     if(opperation == '+'){
         double BAR  = round((temp[0]+temp[1]));
         VALopp[store] = BAR;
@@ -327,6 +355,22 @@ bool fCheck(string data){
     }
     return false;
 }
+bool iCheck(string data){
+    string lineToString[2];
+    for(int i = 0; i< 2; i++){
+        string temp;
+        lineToString[i] = data[i];
+    }
+    string temp = lineToString[0] + lineToString[1];
+    if(temp == "if"){
+        forTemp = data;
+        return true;
+    }
+    return false;
+}
+int iExecute(string data){
+    return 0;
+}
 //when calling lines(return line data) multiply numlines*2 and index at even integers starting at 0
 class callLine {
     public:
@@ -346,14 +390,17 @@ class executeLine{
             bool isPrint = pCheck(currentData);
             bool isVAR = vCheck(currentData);
             bool isFOR = fCheck(currentData);
+            bool isIF = iCheck(currentData);
             //expresion check/execute
             int isM = mCU(currentData);
             //fuction execute
             if(isPrint){ int p = pExecute(currentData);}
             else if(isVAR){ int v = vExecute(currentData);}
             else if(isFOR){ intermediateB =true;}
+            else if(isIF){int i = iExecute(currentData);}
         }
 };
+//brings all the parts together and interprets at "Line" when indexed 0-n
 void callBlocks(int Line){
     callLine currentStack;
     string FOO = currentStack.blockReturn(Line);
@@ -377,7 +424,6 @@ class loopExecute {
                     string testE = testEnd.blockReturn(codeLineStart);
                     if(testE == "]"){
                         temp = codeLineStart;
-                        
                         break;
                     }
                     callBlocks(codeLineStart);
@@ -390,7 +436,6 @@ class loopExecute {
         }
 };
 int fExecute(string data){
-    ///for start~increment>end(i)[
     int part = 0;
     string start;
     string stop;
@@ -398,17 +443,25 @@ int fExecute(string data){
     string iName;
     //newline is interpreted differently via php
     int modeDIFF = 2;
-    if(isWebMode){ modeDIFF = 3;}
+    //if(isWebMode){ modeDIFF = 3;}
     for(int i =4; i<forTemp.length()-modeDIFF; i++){
         if(forTemp[i] == '~' ||forTemp[i]== '>'|| forTemp[i]== '('){
             part++;
             i++;
         }
-        if(part == 0){ start +=forTemp[i];}
-        else if(part == 1){ increment+=forTemp[i];}
-        else if(part == 2){ stop +=forTemp[i];}
-        else if(part == 3){ 
-            iName +=forTemp[i];
+        switch (part){
+            case 0:
+                start +=forTemp[i];
+                break;
+            case 1:
+                increment+=forTemp[i];
+                break;
+            case 2:
+                stop +=forTemp[i];
+                break;
+            case 3:
+                iName +=forTemp[i];
+                break;
         }
     }
     loopExecute loopC;
