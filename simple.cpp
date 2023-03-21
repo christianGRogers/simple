@@ -18,12 +18,14 @@ using namespace std;
 //-->2023-03-09[fix webmode inf]
 //-->2023-03-10[locked out(core dump issues)]
 //-->2023-03-11[organize classes and add for]{decleration order issue start fix at 324}
-//-->2023-03-12[]
+//-->2023-03-12[//]
 //-->2023-03-13[got for working with php integration]{error with code stack return at end of for loop}
 //-->2023-03-14[fix one issue and discover another (start with currentLineG's use int the loop execute class)]
 //-->2023-03-15[fix line return after loop and add hash map for memory]{logic error 372}
 //-->2023-03-16[return line fixed]
-//-->2023-03-17[]
+//-->2023-03-17[//]
+//-->2023-03-20[//]
+//-->2023-03-21[fixing mem indigration]
 //================
 //Globals///////////////////////////
 int pos[1143];
@@ -105,21 +107,20 @@ int splice(string dataI){
 }
 class memory{
     public:
-        string key;
+        string keyV;
         int conversion(){
             int keyConversion;
             for(int i =0; i<3; i++){
-                if(i>key.length()){ break;}
-                keyConversion += (int)key[i];
+                if(i>keyV.length()){ break;}
+                keyConversion += (int)keyV[i];
             }
             return keyConversion*3;
         }
         int addItemToMem(){
             int keyConversion = conversion();
             for(int i = keyConversion; i<memSize-keyConversion;i++){
-                if(pointer[i] == "" ||  pointer[i] == key){
-                    pointer[i] = key;
-                    cout<<i;
+                if(pointer[i] == "" ||  pointer[i] == keyV){
+                    pointer[i] = keyV;
                     return i;
                 }
             }
@@ -128,11 +129,14 @@ class memory{
         int findItemInMem(){
             int keyConversion = conversion();
             for(int i = keyConversion; i<memSize-keyConversion;i++){
-                if(pointer[i] == key){
+                if(pointer[i] == keyV){
+                    ///////start here
+                    cout<<pointer[i];
                     return i;
                 }
             }
-            cout<<"{Element "+ key+" has not been declared}";
+            
+            return -1;
         }
 };
 bool pCheck(string functionLine){
@@ -230,49 +234,53 @@ int vExecute(string FOO){
         }
         i++;
     }
+    //memory add
     memory add;
-    add.key = temp[0];
+    add.keyV = temp[0];
     int index = add.addItemToMem();
     VAL[index] = temp[1];
-    // VAL[NAMECOUNT] = temp;
+    // {old implemetation VAL[NAMECOUNT] = temp;
     // NAMECOUNT ++;
+    //
     return 1;
 }
 void intergerO(string c, string a, string b, char opperation){
-    double temp[2];
-    int store;
-    bool VARa = false;
-    bool VARb = false;
-    for(int i =0; i<memSize; i++){
-        if(a == pointer[i] && VAL[i] != key){
-            temp[0] = stod(VAL[i]);
-            VARa = true;
-        }
-        else if(a == pointer[i] && VAL[i] == key){
-            temp[0] = VALopp[i];
-        }
-        if(b == pointer[i] && VAL[i] != key){
-            if(VAL[i] == "")
-            temp[1]= stod(VAL[i]);
-            VARb = true;
-        }
-        else if(b == pointer[i] && VAL[i] == key){
-            temp[1] = VALopp[i];
-        }
-        if(c == pointer[i]){
-            store = i;
-        }
+    double temp[] = {0, 0};
+    int store = 0;
+    bool nonVARa = false;
+    bool nonVARb = false;
+    ///memory call
+    memory findA;
+    findA.keyV = a;
+    int index = findA.findItemInMem();
+    if(index == -1){ nonVARa = true;}
+    else if(VAL[index] == key){ temp[0] = VALopp[index];}
+    else{ temp[0] = stod(VAL[index]);}
+    if(b != ""){ 
+        memory findB;
+        findB.keyV = b;
+        index = findA.findItemInMem();
+        if(index == -1){ nonVARb =true;}
+        else if(VAL[index] == key){ temp[1] = VALopp[index];}
+        else{ temp[1] = stod(VAL[index]);}
+
     }
-    if(!(VARa)){temp[0] = stod(a);}
-    if(!(VARb)){temp[1] = stod(b);}
-    int tempINT[2] = {(int)temp[0], (int)temp[1]};
+    memory findC;
+    findC.keyV = c;
+    index = findC.findItemInMem();
+    ////
+
+
+    if(!(nonVARa)){temp[0] = stod(a);}
+    if(!(nonVARb)){temp[1] = stod(b);}
+    int tempINT[] = {(int)temp[0], (int)temp[1]};
     if(opperation == '+'){
         double BAR  = round((temp[0]+temp[1]));
         VALopp[store] = BAR;
         VAL[store] = key;
     }
     else if(opperation == '-'){
-        double BAR  = round((temp[0]*temp[1])*100)/100.0;
+        double BAR  = round((temp[0]-temp[1])*100)/100.0;
         VALopp[store] = BAR;
         VAL[store] = key;
     }

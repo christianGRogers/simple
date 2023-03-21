@@ -1,2 +1,4 @@
-VAR a hehe
+VAR a 0
+VAR b 2
+a=1-1
 print a
