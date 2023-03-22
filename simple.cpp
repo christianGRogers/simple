@@ -25,7 +25,7 @@ using namespace std;
 //-->2023-03-16[return line fixed]
 //-->2023-03-17[//]
 //-->2023-03-20[//]
-//-->2023-03-21[fixing mem indigration]
+//-->2023-03-21[fixing mem indigration --- all good -- continue with bools]
 //================
 //Globals///////////////////////////
 int pos[1143];
@@ -36,8 +36,8 @@ double VALopp[1143];
 int memSize = 1143;
 int NAMECOUNT = 0;
 //mode selector//
-bool debugMode = false;
-bool isWebMode = true;
+bool debugMode = true;
+bool isWebMode = false;
 //
 string key = "@8901262g2h2jk21";
 int Lines;
@@ -109,7 +109,7 @@ class memory{
     public:
         string keyV;
         int conversion(){
-            int keyConversion;
+            int keyConversion =0;
             for(int i =0; i<3; i++){
                 if(i>keyV.length()){ break;}
                 keyConversion += (int)keyV[i];
@@ -118,20 +118,18 @@ class memory{
         }
         int addItemToMem(){
             int keyConversion = conversion();
-            for(int i = keyConversion; i<memSize-keyConversion;i++){
+            for(int i = keyConversion; i<memSize;i++){
                 if(pointer[i] == "" ||  pointer[i] == keyV){
                     pointer[i] = keyV;
                     return i;
                 }
             }
-            return memSize+10;
+            return -1;
         }
         int findItemInMem(){
             int keyConversion = conversion();
-            for(int i = keyConversion; i<memSize-keyConversion;i++){
+            for(int i = keyConversion; i<memSize;i++){
                 if(pointer[i] == keyV){
-                    ///////start here
-                    cout<<pointer[i];
                     return i;
                 }
             }
@@ -186,19 +184,12 @@ int pExecute(string FOO){
             temp += FOO[i];
             i++;
         }
-        for(int i =0; i< 1000; i++){
-            string out;
-            if(pointer[i] == temp){
-                if(VAL[i] == key){
-                    cout<<VALopp[i];
-                }
-                else{
-                    cout<<VAL[i];
-                }
-                cout<<newLine;
-                return 0;
-            }
-        }
+        memory print;
+        print.keyV = temp; 
+        int index = print.findItemInMem();
+        if(VAL[index] == key){ cout<<VALopp[index];}
+        else{ cout<<VAL[index];}
+        cout<<newLine;    
     }
     return 1;    
 }
@@ -225,7 +216,6 @@ int vExecute(string FOO){
         temp[0] += FOO[i];
         i++;
     }
-    pointer[NAMECOUNT] =temp[0];
     i++;
     while(true){
         temp[1] += FOO[i];
@@ -239,6 +229,7 @@ int vExecute(string FOO){
     add.keyV = temp[0];
     int index = add.addItemToMem();
     VAL[index] = temp[1];
+    pointer[index] =temp[0];
     // {old implemetation VAL[NAMECOUNT] = temp;
     // NAMECOUNT ++;
     //
@@ -259,7 +250,7 @@ void intergerO(string c, string a, string b, char opperation){
     if(b != ""){ 
         memory findB;
         findB.keyV = b;
-        index = findA.findItemInMem();
+        index = findB.findItemInMem();
         if(index == -1){ nonVARb =true;}
         else if(VAL[index] == key){ temp[1] = VALopp[index];}
         else{ temp[1] = stod(VAL[index]);}
@@ -269,38 +260,40 @@ void intergerO(string c, string a, string b, char opperation){
     findC.keyV = c;
     index = findC.findItemInMem();
     ////
-
-
-    if(!(nonVARa)){temp[0] = stod(a);}
-    if(!(nonVARb)){temp[1] = stod(b);}
-    int tempINT[] = {(int)temp[0], (int)temp[1]};
+    if(nonVARa){temp[0] = stod(a);}
+    if(nonVARb && opperation != 'n'){temp[1] = stod(b);}
+    int tempINT[2];
+    if(opperation != 'n'){
+        tempINT[0] = (int)temp[0];
+        tempINT[1] = (int)temp[1];
+    }
     if(opperation == '+'){
         double BAR  = round((temp[0]+temp[1]));
-        VALopp[store] = BAR;
-        VAL[store] = key;
+        VALopp[index] = BAR;
+        VAL[index] = key;
     }
     else if(opperation == '-'){
         double BAR  = round((temp[0]-temp[1])*100)/100.0;
-        VALopp[store] = BAR;
-        VAL[store] = key;
+        VALopp[index] = BAR;
+        VAL[index] = key;
     }
     else if(opperation == '*'){
         double BAR = round((temp[0]*temp[1])*100)/100.0;
-        VALopp[store] = BAR;
-        VAL[store] = key;
+        VALopp[index] = BAR;
+        VAL[index] = key;
     }
     else if(opperation == '%'){
-        VALopp[store] = tempINT[0]%tempINT[1];
-        VAL[store] = key;
+        VALopp[index] = tempINT[0]%tempINT[1];
+        VAL[index] = key;
     }
     else if(opperation == 'n'){
-        VALopp[store] = tempINT[0];
-        VAL[store] = key;
+        VALopp[index] = temp[0];
+        VAL[index] = key;
     }
     else{
         double BAR = round((temp[0]/temp[1])*100)/100.0;
-        VALopp[store] = BAR;
-        VAL[store] = key;
+        VALopp[index] = BAR;
+        VAL[index] = key;
     }
 }
 int mCU(string functionLine){
@@ -323,7 +316,7 @@ int mCU(string functionLine){
     i++;
     char opperation;
     while(true){
-        if(i>functionLine.length()){
+        if(i>=functionLine.length()){
             opperation ='n';
             reactants[0] = temp;
             intergerO(product, reactants[0], "1", opperation);
@@ -394,18 +387,21 @@ class executeLine{
     public:
         void callBack(string currentData){
             intermediateS = currentData;
-            //check all possible functions
-            bool isPrint = pCheck(currentData);
-            bool isVAR = vCheck(currentData);
-            bool isFOR = fCheck(currentData);
-            bool isIF = iCheck(currentData);
-            //expresion check/execute
-            int isM = mCU(currentData);
-            //fuction execute
-            if(isPrint){ int p = pExecute(currentData);}
-            else if(isVAR){ int v = vExecute(currentData);}
-            else if(isFOR){ intermediateB =true;}
-            else if(isIF){int i = iExecute(currentData);}
+            //
+            if(currentData[0] != '$'){
+                //check all possible functions
+                bool isPrint = pCheck(currentData);
+                bool isVAR = vCheck(currentData);
+                bool isFOR = fCheck(currentData);
+                bool isIF = iCheck(currentData);
+                //expresion check/execute
+                int isM = mCU(currentData);
+                //fuction execute
+                if(isPrint){ int p = pExecute(currentData);}
+                else if(isVAR){ int v = vExecute(currentData);}
+                else if(isFOR){ intermediateB =true;}
+                else if(isIF){int i = iExecute(currentData);}
+            }
         }
 };
 //brings all the parts together and interprets at "Line" when indexed 0-n

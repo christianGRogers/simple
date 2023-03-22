@@ -1,4 +1,10 @@
+print"fibonacci sequence:"
 VAR a 0
-VAR b 2
-a=1-1
-print a
+VAR b 1
+VAR sum 0
+for 0~1>20(i)[
+a=b
+b=sum
+sum=a+b
+print sum
+]

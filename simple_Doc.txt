@@ -38,3 +38,20 @@ IF LOGIC(if)
 								else[
 								$code
 								]
+GENERIC ALGORITHMS:
+	Examples:
+	
+	1. fibonacci sequence(prints 20 values of the fibonacci sequence using basic integer math and a for loop)
+
+print"fibonacci sequence:"
+VAR a 0
+VAR b 1
+VAR sum 0
+for 0~1>20(i)[
+a=b
+b=sum
+sum=a+b
+print sum
+]
+
+
