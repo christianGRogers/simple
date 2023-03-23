@@ -26,18 +26,18 @@ FOR(for):
 								for start~increment>end(i)[
 								$code
 								]
-	Start increment and end are only acepted as integers and are automaticly rounded down.
+	Start increment and end are only accepted as integers and are automatically rounded down.
 IF LOGIC(if)
-	Executes expresion if bool is true:
-								if(true)[
+	Executes expression if bool is true:
+								if(true){
 								$code
-								]
-								eif(true)[
+								}
+								eif(true){
 								$code
-								]
-								else[
+								}
+								else{
 								$code
-								]
+								}
 GENERIC ALGORITHMS:
 	Examples:
 	
