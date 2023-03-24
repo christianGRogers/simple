@@ -27,6 +27,7 @@ using namespace std;
 //-->2023-03-20[//]
 //-->2023-03-21[fixing mem indigration --- all good -- continue with bools]
 //-->2023-03-22[re-add to php]
+//-->2023-03-23[]
 //================
 //Globals///////////////////////////
 int pos[1143];
@@ -138,6 +139,126 @@ class memory{
             return -1;
         }
 };
+class intToString{
+    private:
+        string base[] = {"", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"};
+        string teen[] = {"eleven", "twelve", "thirteen", "fourteen", "fiveteen", "sixteen", "seventeen", "eighteen", "nineteen"};
+        string base10[] = {"", "ten", "twenty", "thirty", "fourty", "fivety", "sixty", "seventy", "eighty", "ninety"};
+        //42index or 40 pre-made prefic 
+        string bigBois[] ={"", "thousand", "million", "billion", "trillion", "Quadrillion", "Quintillion", "Sextillion", "Septillion", "Octillion", "Nonillion", "Decillion", "Undecillion", "Duodecillion", "Tredecillion", "Quattuordecillion", "Quindecillion", "Sedecillion", "Septendecillion", "Octodecillion", "Novendecillion", "Vigintillion", "Unvigintillion", "Duovigintillion", "Tresvigintillion", "Quattuor­vigint­illion", "Quinvigintillion", "Sesvigintillion", "Septemvigintillion", "Octovigintillion", "Novemvigintillion", "Trigintillion", "Untrigintillion", "Duotrigintillion", "Trestrigintillion", "Quattuor­trigint­illion", "Quintrigintillion", "Sestrigintillion", "Septentrigintillion", "Octotrigintillion", "Noventrigintillion", "Quadragintillion"};
+        string prefixbase1[] = {"", "un", "duo", "tre", "quattuor", "quinqua", "se", "septe", "octo", "nove"};
+        string prefixvaseten[] = {"", "Deci", "viginti", "vriginta", "quadraginta", "quinquaginta", "sexaginta", "septuaginta", "octoginta", "nonaginta"};
+        string prefixbasehun[] = {"", "centi",  "ducenti", "trecenti", "quadringenti", "quingenti", "sescenti", "septingenti", "octingenti", "nongenti"};
+        string splice[1000];
+    public:
+        string foo;
+        string ctos(char a){
+            string temp;
+            switch (a){
+                case '0': temp = "0";break;
+                case '1': temp = "1";break;
+                case '2': temp = "2";break;
+                case '3': temp = "3";break;
+                case '4': temp = "4";break;
+                case '5': temp = "5";break;
+                case '6': temp = "6";break;
+                case '7': temp = "7";break;
+                case '8': temp = "8";break;
+                case '9': temp = "9";break;
+            }
+            return temp;
+
+        }
+        string nameSplice(string in){
+            string p[3] = {ctos(in[0]), ctos(in[1]), ctos(in[2])};
+            string out = "";
+            string teenS = "";
+            if(p[1] == "1" && p[2] != "0"){
+                teenS = teen[stoi(p[2])-1];
+            }
+            string hundred = "";
+            //set up hundred join
+            if(p[0] != "0"){
+                hundred =" hundred ";
+                if(p[1] != "" || p[2] != ""){
+                    hundred = " hundred and ";
+                }
+            }
+            //base ten dash
+            string dash ="";
+            if(p[1] != "0" && p[2] != "0"){
+                dash = "-";
+            }
+            string foo = base10[stoi(p[1])]+ dash+ base[stoi(p[2])];
+            if(teenS != ""){
+                foo = teenS;
+            }
+            out = base[stoi(p[0])]+hundred+foo;
+            return out;
+            
+        }
+        string returnS(string Num){
+            int count = 0;
+            if(Num.length()%3!=0){
+                Num = "0"+Num;
+                if(Num.length()%3!=0){Num = "0"+Num;}
+            }
+            for(int i =(Num.length()/3)-1; i>-1;i-=1){
+
+                splice[i] = ctos(Num[count])+ctos(Num[count+1])+ctos(Num[count+2]);
+                count+=3;
+            }
+            return Num;
+        }
+        string joinbigBois(int num){
+            int o =num%10;
+            int t = ((num%100)-o)/10;
+            int h = (num-o-t)/100;
+            int thou = (num-(num%1000))/1000;
+            string biggestBoi = "";
+            if(thou>0){
+                int one =thou%10;
+                int ten = ((thou%100)-o)/10;
+                int hund = (thou-o-t)/100;
+                biggestBoi = prefixbasehun[hund]+prefixvaseten[ten]+prefixbase1[one]+" millinillion ";
+            }
+            string out = biggestBoi+ prefixbasehun[h]+prefixvaseten[t]+prefixbase1[o]+"illion";
+            return out;
+        }
+        string Starrt(){
+            foo = returnS(foo);
+            string out ="";
+            string endTemp;
+            for(int i = 0; i<foo.length()/3; i++){
+                if(i >=41){
+                    out = " "+nameSplice(splice[i]) +" "+joinbigBois(i)+out;
+                }
+                else{
+                    out = " "+nameSplice(splice[i]) +" "+bigBois[i]+out;
+                }
+            }
+            return out;
+        }
+};
+void itosCheck(string functionLine){
+    //isaacIsBad()
+    string lineToString[9];
+    for(int i = 0; i< 9; i++){
+        string temp;
+        lineToString[i] = functionLine[i];
+    }
+    string temp = lineToString[0] + lineToString[1] + lineToString[2] + lineToString[3] + lineToString[4]+ lineToString[5]+lineToString[6]+lineToString[7]+lineToString[8];
+    if(temp == "isaacIsBad"){
+        string temp="";
+        for(int i = 10; i< functionLine.length()-2; i++){
+            temp+=functionLine[i];
+        }
+        intToString isaac.foo;
+        isaac.foo = temp;
+        string print = isaac.Starrt();
+        cout<<print;
+    }
+}
 bool pCheck(string functionLine){
     string lineToString[5];
     for(int i = 0; i< 5; i++){
@@ -370,9 +491,15 @@ bool iCheck(string data){
     }
     return false;
 }
+bool booleanTest(string data){
+    return false;
+}
 int iExecute(string data){
+    //if(true){}
+
     return 0;
 }
+
 //when calling lines(return line data) multiply numlines*2 and index at even integers starting at 0
 class callLine {
     public:
@@ -397,6 +524,7 @@ class executeLine{
                 bool isIF = iCheck(currentData);
                 //expresion check/execute
                 int isM = mCU(currentData);
+
                 //fuction execute
                 if(isPrint){ int p = pExecute(currentData);}
                 else if(isVAR){ int v = vExecute(currentData);}
