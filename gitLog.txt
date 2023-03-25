@@ -1,0 +1,24 @@
+created :2023-02-17[read file with print functonality]{error pCheck(43) non congruent value(should == print) but  == !┐÷ char to string conversion error suspected}
+Revisions:
+-->2023-02-18[print function works]{error only executes one line}
+-->2023-02-19[line read fixed start on varible system]
+-->2023-02-21[check var causing issues]
+-->2023-02-27[add arithmatic functonality and intergrate php]
+-->2023-03-01[car trip lol continue with inline entry functonlity]
+-->2023-03-07[arithmatic and git repo created]
+-->2023-03-08[add run --/--continue integration(webMode)]
+-->2023-03-09[fix webmode inf]
+-->2023-03-10[locked out(core dump issues)]
+-->2023-03-11[organize classes and add for]{decleration order issue start fix at 324}
+-->2023-03-12[//]
+-->2023-03-13[got for working with php integration]{error with code stack return at end of for loop}
+-->2023-03-14[fix one issue and discover another (start with currentLineG's use int the loop execute class)]
+-->2023-03-15[fix line return after loop and add hash map for memory]{logic error 372}
+-->2023-03-16[return line fixed]
+-->2023-03-17[//]
+-->2023-03-20[//]
+-->2023-03-21[fixing mem indigration --- all good -- continue with bools]
+-->2023-03-22[re-add to php]
+-->2023-03-23[]
+-->2023-03-23[intigrate "isaac is bad"]
+================

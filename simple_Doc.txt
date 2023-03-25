@@ -53,5 +53,8 @@ b=sum
 sum=a+b
 print sum
 ]
-
+ISAAC IS BAD:
+	this function will return the sentence value of any integer:
+								
+								isaacIsBad(1234)
 

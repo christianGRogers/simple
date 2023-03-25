@@ -4,31 +4,8 @@
 #include <typeinfo>
 #include <cmath>
 using namespace std;
-//================
-//MASTER REPO
-//created :2023-02-17[read file with print functonality]{error pCheck(43) non congruent value(should == print) but  == !┐÷ char to string conversion error suspected}
-//Revisions:
-//-->2023-02-18[print function works]{error only executes one line}
-//-->2023-02-19[line read fixed start on varible system]
-//-->2023-02-21[check var causing issues]
-//-->2023-02-27[add arithmatic functonality and intergrate php]
-//-->2023-03-01[car trip lol continue with inline entry functonlity]
-//-->2023-03-07[arithmatic and git repo created]
-//-->2023-03-08[add run --/--continue integration(webMode)]
-//-->2023-03-09[fix webmode inf]
-//-->2023-03-10[locked out(core dump issues)]
-//-->2023-03-11[organize classes and add for]{decleration order issue start fix at 324}
-//-->2023-03-12[//]
-//-->2023-03-13[got for working with php integration]{error with code stack return at end of for loop}
-//-->2023-03-14[fix one issue and discover another (start with currentLineG's use int the loop execute class)]
-//-->2023-03-15[fix line return after loop and add hash map for memory]{logic error 372}
-//-->2023-03-16[return line fixed]
-//-->2023-03-17[//]
-//-->2023-03-20[//]
-//-->2023-03-21[fixing mem indigration --- all good -- continue with bools]
-//-->2023-03-22[re-add to php]
-//-->2023-03-23[]
-//================
+//created :2023-02-17 by Christian Rogers
+
 //Globals///////////////////////////
 int pos[1143];
 string pointer[1143];
@@ -140,17 +117,8 @@ class memory{
         }
 };
 class intToString{
-    private:
-        string base[] = {"", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"};
-        string teen[] = {"eleven", "twelve", "thirteen", "fourteen", "fiveteen", "sixteen", "seventeen", "eighteen", "nineteen"};
-        string base10[] = {"", "ten", "twenty", "thirty", "fourty", "fivety", "sixty", "seventy", "eighty", "ninety"};
-        //42index or 40 pre-made prefic 
-        string bigBois[] ={"", "thousand", "million", "billion", "trillion", "Quadrillion", "Quintillion", "Sextillion", "Septillion", "Octillion", "Nonillion", "Decillion", "Undecillion", "Duodecillion", "Tredecillion", "Quattuordecillion", "Quindecillion", "Sedecillion", "Septendecillion", "Octodecillion", "Novendecillion", "Vigintillion", "Unvigintillion", "Duovigintillion", "Tresvigintillion", "Quattuor­vigint­illion", "Quinvigintillion", "Sesvigintillion", "Septemvigintillion", "Octovigintillion", "Novemvigintillion", "Trigintillion", "Untrigintillion", "Duotrigintillion", "Trestrigintillion", "Quattuor­trigint­illion", "Quintrigintillion", "Sestrigintillion", "Septentrigintillion", "Octotrigintillion", "Noventrigintillion", "Quadragintillion"};
-        string prefixbase1[] = {"", "un", "duo", "tre", "quattuor", "quinqua", "se", "septe", "octo", "nove"};
-        string prefixvaseten[] = {"", "Deci", "viginti", "vriginta", "quadraginta", "quinquaginta", "sexaginta", "septuaginta", "octoginta", "nonaginta"};
-        string prefixbasehun[] = {"", "centi",  "ducenti", "trecenti", "quadringenti", "quingenti", "sescenti", "septingenti", "octingenti", "nongenti"};
-        string splice[1000];
     public:
+        string splice[1000];
         string foo;
         string ctos(char a){
             string temp;
@@ -170,6 +138,9 @@ class intToString{
 
         }
         string nameSplice(string in){
+            static string base[] = {"", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"};
+            static string teen[] = {"eleven", "twelve", "thirteen", "fourteen", "fiveteen", "sixteen", "seventeen", "eighteen", "nineteen"};
+            static string base10[] = {"", "ten", "twenty", "thirty", "fourty", "fivety", "sixty", "seventy", "eighty", "ninety"};
             string p[3] = {ctos(in[0]), ctos(in[1]), ctos(in[2])};
             string out = "";
             string teenS = "";
@@ -211,6 +182,10 @@ class intToString{
             return Num;
         }
         string joinbigBois(int num){
+            static string bigBois[] ={"", "thousand", "million", "billion", "trillion", "Quadrillion", "Quintillion", "Sextillion", "Septillion", "Octillion", "Nonillion", "Decillion", "Undecillion", "Duodecillion", "Tredecillion", "Quattuordecillion", "Quindecillion", "Sedecillion", "Septendecillion", "Octodecillion", "Novendecillion", "Vigintillion", "Unvigintillion", "Duovigintillion", "Tresvigintillion", "Quattuor­vigint­illion", "Quinvigintillion", "Sesvigintillion", "Septemvigintillion", "Octovigintillion", "Novemvigintillion", "Trigintillion", "Untrigintillion", "Duotrigintillion", "Trestrigintillion", "Quattuor­trigint­illion", "Quintrigintillion", "Sestrigintillion", "Septentrigintillion", "Octotrigintillion", "Noventrigintillion", "Quadragintillion"};
+            static string prefixbase1[] = {"", "un", "duo", "tre", "quattuor", "quinqua", "se", "septe", "octo", "nove"};
+            static string prefixvaseten[] = {"", "Deci", "viginti", "vriginta", "quadraginta", "quinquaginta", "sexaginta", "septuaginta", "octoginta", "nonaginta"};
+            static string prefixbasehun[] = {"", "centi",  "ducenti", "trecenti", "quadringenti", "quingenti", "sescenti", "septingenti", "octingenti", "nongenti"};
             int o =num%10;
             int t = ((num%100)-o)/10;
             int h = (num-o-t)/100;
@@ -226,6 +201,7 @@ class intToString{
             return out;
         }
         string Starrt(){
+            static string bigBois[] ={"", "thousand", "million", "billion", "trillion", "Quadrillion", "Quintillion", "Sextillion", "Septillion", "Octillion", "Nonillion", "Decillion", "Undecillion", "Duodecillion", "Tredecillion", "Quattuordecillion", "Quindecillion", "Sedecillion", "Septendecillion", "Octodecillion", "Novendecillion", "Vigintillion", "Unvigintillion", "Duovigintillion", "Tresvigintillion", "Quattuor­vigint­illion", "Quinvigintillion", "Sesvigintillion", "Septemvigintillion", "Octovigintillion", "Novemvigintillion", "Trigintillion", "Untrigintillion", "Duotrigintillion", "Trestrigintillion", "Quattuor­trigint­illion", "Quintrigintillion", "Sestrigintillion", "Septentrigintillion", "Octotrigintillion", "Noventrigintillion", "Quadragintillion"};
             foo = returnS(foo);
             string out ="";
             string endTemp;
@@ -242,18 +218,18 @@ class intToString{
 };
 void itosCheck(string functionLine){
     //isaacIsBad()
-    string lineToString[9];
-    for(int i = 0; i< 9; i++){
+    string lineToString[10];
+    for(int i = 0; i< 10; i++){
         string temp;
         lineToString[i] = functionLine[i];
     }
-    string temp = lineToString[0] + lineToString[1] + lineToString[2] + lineToString[3] + lineToString[4]+ lineToString[5]+lineToString[6]+lineToString[7]+lineToString[8];
+    string temp = lineToString[0] + lineToString[1] + lineToString[2] + lineToString[3] + lineToString[4]+ lineToString[5]+lineToString[6]+lineToString[7]+lineToString[8]+lineToString[9];
     if(temp == "isaacIsBad"){
         string temp="";
-        for(int i = 10; i< functionLine.length()-2; i++){
+        for(int i = 11; i< functionLine.length()-2; i++){
             temp+=functionLine[i];
         }
-        intToString isaac.foo;
+        intToString isaac;
         isaac.foo = temp;
         string print = isaac.Starrt();
         cout<<print;
@@ -524,7 +500,7 @@ class executeLine{
                 bool isIF = iCheck(currentData);
                 //expresion check/execute
                 int isM = mCU(currentData);
-
+                itosCheck(currentData);
                 //fuction execute
                 if(isPrint){ int p = pExecute(currentData);}
                 else if(isVAR){ int v = vExecute(currentData);}
