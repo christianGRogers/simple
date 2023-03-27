@@ -26,6 +26,8 @@ string dataRAW;
 string forTemp;
 string intermediateS;
 bool intermediateB = false;
+bool intermediateB1 = false;
+bool intermediateB2 = false;
 bool isLoop = false;
 ////////////////////////////////////
 string getfile(string fileName){
@@ -232,7 +234,7 @@ void itosCheck(string functionLine){
         intToString isaac;
         isaac.foo = temp;
         string print = isaac.Starrt();
-        cout<<print;
+        cout<<print+"\n";
     }
 }
 bool pCheck(string functionLine){
@@ -468,11 +470,71 @@ bool iCheck(string data){
     return false;
 }
 bool booleanTest(string data){
+    int i = 0;
+    string a ="";
+    string b ="";
+    if(data == "true"){return true;}
+    if(data == "false"){return false;}
+    memory find;
+    find.keyV = data;
+    int indexFind = find.findItemInMem();
+    if(indexFind != -1){
+        if(VAL[indexFind] == "true"){return true;}
+        if(VAL[indexFind] == "false"){return false;}   
+    }
+    while(true){
+        if(data[i] == '='){i+=2; break;}
+        a+=data[i];
+        i++;
+    }
+    while(true){
+        if(i >= data.length()){ break;}
+        b+=data[i];
+        i++;
+    }
+    memory findA;
+    findA.keyV = a;
+    int indexA = findA.findItemInMem();
+    memory findB;
+    findB.keyV = b;
+    int indexB = findB.findItemInMem();
+    string val[2];
+    if(indexA == -1){val[0] = a;}
+    else{
+        if(VAL[indexA] == key){
+            val[0] = VALopp[indexA];
+        }
+        else{
+            val[0] = VAL[indexA];
+        }
+    }
+    if(indexB == -1){val[1] = b;}
+    else{
+        if(VAL[indexB] == key){
+            val[1] = VALopp[indexB];
+        }
+        else{
+            val[1] = VAL[indexB];
+        }
+    }
+    if(val[0] == val[1]){
+        return true;
+    }
     return false;
 }
 int iExecute(string data){
-    //if(true){}
-
+    //if(true){
+        string temp;
+    for(int i=3; i<data.length()-2; i++){
+        temp += data[i];
+    }
+    bool isTrue = booleanTest(temp);
+    if(isTrue){
+        intermediateB1 =true;
+    }
+    else{
+        intermediateB2 = true;
+    }
     return 0;
 }
 
@@ -499,13 +561,16 @@ class executeLine{
                 bool isFOR = fCheck(currentData);
                 bool isIF = iCheck(currentData);
                 //expresion check/execute
-                int isM = mCU(currentData);
                 itosCheck(currentData);
                 //fuction execute
                 if(isPrint){ int p = pExecute(currentData);}
                 else if(isVAR){ int v = vExecute(currentData);}
                 else if(isFOR){ intermediateB =true;}
                 else if(isIF){int i = iExecute(currentData);}
+                //arithmitic last to avoid exeption
+                else{
+                    int isM = mCU(currentData);
+                }
             }
         }
 };
@@ -519,11 +584,29 @@ void callBlocks(int Line){
 //fix logic so cuurentLineG is correct at end of loop
 class loopExecute {
     public:
-        void loop(int Start,int End,int step, string iName){
-            isLoop = true;
-            currentLineG+=2;
-            int codeLineStart;
+        void loop(int Start,int End,int step, string iName, bool isIF, bool isIFpass){
+            string endTest = "]";
+            if(isIF){
+                endTest = "}";
+            }
+            int codeLineStart = currentLineG;
             int temp;
+            currentLineG+=2;
+            if(isIFpass){
+                endTest = "}";
+                while(true){
+                    callLine testEnd0;
+                    string testE = testEnd0.blockReturn(codeLineStart);
+                    if(testE == endTest){
+                        temp = codeLineStart;
+                        break;
+                    }
+                    codeLineStart+=2;
+                }
+                currentLineG = temp+2;
+                return;
+            }
+            isLoop = true;
             temp = vExecute("VAR "+iName+" "+ to_string(Start));
             for(int a = Start; a<End; a+=step){
                 temp = mCU(iName+"="+to_string(a));
@@ -531,7 +614,7 @@ class loopExecute {
                 while(true){
                     callLine testEnd;
                     string testE = testEnd.blockReturn(codeLineStart);
-                    if(testE == "]"){
+                    if(testE == endTest){
                         temp = codeLineStart;
                         break;
                     }
@@ -574,19 +657,36 @@ int fExecute(string data){
         }
     }
     loopExecute loopC;
-    loopC.loop(stoi(start), stoi(stop), stoi(increment), iName);
+    loopC.loop(stoi(start), stoi(stop), stoi(increment), iName, false, false);
     return 1;
 }
+
 int main(){
     dataRAW = setUp();
     Lines = splice(dataRAW);
     for(int i = 0; i<Lines; i+=2){
         callBlocks(i);
+        //the following cases create a seperate execute object for their specific use
         if(intermediateB){ 
             currentLineG = i;
             int temp = fExecute(intermediateS);
             i = currentLineG-2;
         }
+        if(intermediateB1){ 
+            currentLineG = i;
+            loopExecute loopif;
+            loopif.loop(0, 1, 1, "oiuoiuoiuhhh", true, false);
+            i = currentLineG-2;
+            intermediateB1 =false;
+        }
+        if(intermediateB2){ 
+            currentLineG = i;
+            loopExecute loopnIF;
+            loopnIF.loop(0, 1, 1, "", false, true);
+            i = currentLineG-2;
+            intermediateB2 =false;
+        }
+
     }
     return 1;
 }

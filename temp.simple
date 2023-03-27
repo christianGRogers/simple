@@ -1,1 +1,4 @@
-isaacIsBad(1234)
+VAR isaacIsBad true
+if(isaacIsBad){
+print"isaac is bad"
+}

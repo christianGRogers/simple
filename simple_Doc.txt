@@ -38,6 +38,14 @@ IF LOGIC(if)
 								else{
 								$code
 								}
+BOOL()
+	Bool data type is indistinguishable from the string true and can be stored in the same way. moreover one can compare ints and strings with the '==' operator or, '!='. The use of '>=', '<=' is limited to numerical comparisons and is possible with type double; but is only effective with type int. Mathematical operations are not supported within a logic comparison.
+
+STRING TO INT(isaacIsBad())
+	Converts data type int to its sentence structor equivalent:
+								issacIsBad(33)
+								$outputs "thirty-three"
+
 GENERIC ALGORITHMS:
 	Examples:
 	

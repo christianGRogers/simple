@@ -21,4 +21,5 @@ Revisions:
 -->2023-03-22[re-add to php]
 -->2023-03-23[]
 -->2023-03-23[intigrate "isaac is bad"]
+-->2023-03-27[continue with bool]
 ================
