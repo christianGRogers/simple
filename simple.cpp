@@ -581,10 +581,45 @@ void callBlocks(int Line){
     executeLine currentInstruction;
     currentInstruction.callBack(FOO); 
 }
+class ifExeptiom {
+    public:
+        void loop(bool isIFpass){
+            string endTest = "}";
+            int codeLineStart = currentLineG;
+            int temp;
+            currentLineG+=2;
+            if(isIFpass){
+                while(true){
+                    callLine testEnd0;
+                    string testE = testEnd0.blockReturn(codeLineStart);
+                    if(testE == endTest){
+                        temp = codeLineStart;
+                        break;
+                    }
+                    codeLineStart+=2;
+                }
+                currentLineG = temp+2;
+                return;
+            }
+            codeLineStart = currentLineG;
+            while(true){
+                callLine testEnd;
+                string testE = testEnd.blockReturn(codeLineStart);
+                if(testE == endTest){
+                    temp = codeLineStart;
+                    break;
+                }
+                callBlocks(codeLineStart);
+                codeLineStart+=2;
+            }
+            currentLineG = temp+2;
+        }
+};
 //fix logic so cuurentLineG is correct at end of loop
 class loopExecute {
     public:
         void loop(int Start,int End,int step, string iName, bool isIF, bool isIFpass){
+
             string endTest = "]";
             if(isIF){
                 endTest = "}";
@@ -617,6 +652,16 @@ class loopExecute {
                     if(testE == endTest){
                         temp = codeLineStart;
                         break;
+                    }
+                    if(testE[testE.length()-1] == '{'){
+                        iExecute(testE);
+                        ifExeptiom forIf;
+                        forIf.loop(intermediateB2);
+                        intermediateB1 =false;
+                        intermediateB2 =false;
+                        codeLineStart = currentLineG;
+                        cout<<codeLineStart;
+                        continue;
                     }
                     callBlocks(codeLineStart);
                     codeLineStart+=2;
