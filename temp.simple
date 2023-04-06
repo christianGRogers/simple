@@ -9,3 +9,16 @@ if(false){
 print"s3 is true"
 }
 ]
+print"all done"
+for 0~1>10(i)[
+if(true){
+print"s1 is true"
+}
+if(false){
+print"f"
+}
+if(false){
+print"s3 is true"
+}
+]
+print"all done"

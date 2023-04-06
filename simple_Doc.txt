@@ -32,12 +32,10 @@ IF LOGIC(if)
 								if(true){
 								$code
 								}
-								eif(true){
+								if(false){
 								$code
 								}
-								else{
-								$code
-								}
+
 BOOL()
 	Bool data type is indistinguishable from the string true and can be stored in the same way. moreover one can compare ints and strings with the '==' operator or, '!='. The use of '>=', '<=' is limited to numerical comparisons and is possible with type double; but is only effective with type int. Mathematical operations are not supported within a logic comparison.
 
@@ -61,8 +59,35 @@ b=sum
 sum=a+b
 print sum
 ]
-ISAAC IS BAD:
-	this function will return the sentence value of any integer:
-								
-								isaacIsBad(1234)
+
+	2. For loop with if statments; demonstraight if capabilitys.
+for 0~1>10(i)[
+if(true){
+print"s1 is true"
+}
+if(false){
+print"f"
+}
+if(false){
+print"s3 is true"
+}
+]
+print"all done"
+for 0~1>10(i)[
+if(true){
+print"s1 is true"
+}
+if(false){
+print"f"
+}
+if(false){
+print"s3 is true"
+}
+]
+print"all done"
+
+NESTING:
+	current version has limited nesting capabilitys.
+
+
 

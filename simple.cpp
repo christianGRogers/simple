@@ -28,7 +28,6 @@ string intermediateS;
 bool intermediateB = false;
 bool intermediateB1 = false;
 bool intermediateB2 = false;
-bool isLoop = false;
 ////////////////////////////////////
 string getfile(string fileName){
     ifstream read(fileName);
@@ -531,6 +530,7 @@ int iExecute(string data){
     bool isTrue = booleanTest(temp);
     if(isTrue){
         intermediateB1 =true;
+        return 1;
     }
     else{
         intermediateB2 = true;
@@ -566,7 +566,7 @@ class executeLine{
                 if(isPrint){ int p = pExecute(currentData);}
                 else if(isVAR){ int v = vExecute(currentData);}
                 else if(isFOR){ intermediateB =true;}
-                else if(isIF){int i = iExecute(currentData);}
+                else if(isIF){ int i = iExecute(currentData);}
                 //arithmitic last to avoid exeption
                 else{
                     int isM = mCU(currentData);
@@ -588,10 +588,12 @@ class ifExeptiom {
             int codeLineStart = currentLineG;
             int temp;
             currentLineG+=2;
+            callLine testEnd0;
+            string testE;
+            
             if(isIFpass){
                 while(true){
-                    callLine testEnd0;
-                    string testE = testEnd0.blockReturn(codeLineStart);
+                    testE = testEnd0.blockReturn(codeLineStart);
                     if(testE == endTest){
                         temp = codeLineStart;
                         break;
@@ -602,9 +604,9 @@ class ifExeptiom {
                 return;
             }
             codeLineStart = currentLineG;
+            callLine testEnd;
             while(true){
-                callLine testEnd;
-                string testE = testEnd.blockReturn(codeLineStart);
+                testE = testEnd.blockReturn(codeLineStart);
                 if(testE == endTest){
                     temp = codeLineStart;
                     break;
@@ -624,9 +626,10 @@ class loopExecute {
             if(isIF){
                 endTest = "}";
             }
-            int codeLineStart = currentLineG;
-            int temp;
             currentLineG+=2;
+            int codeLineStart = currentLineG;
+            int FOO =codeLineStart; 
+            int temp;
             if(isIFpass){
                 endTest = "}";
                 while(true){
@@ -641,35 +644,35 @@ class loopExecute {
                 currentLineG = temp+2;
                 return;
             }
-            isLoop = true;
             temp = vExecute("VAR "+iName+" "+ to_string(Start));
+            int b;
+            callLine testEnd;
+            string testE;
+            ifExeptiom forIf;
             for(int a = Start; a<End; a+=step){
                 temp = mCU(iName+"="+to_string(a));
-                codeLineStart = currentLineG;
-                while(true){
-                    callLine testEnd;
-                    string testE = testEnd.blockReturn(codeLineStart);
+                codeLineStart = FOO;
+                currentLineG = FOO;
+                while(true){;
+                    testE = testEnd.blockReturn(codeLineStart);
                     if(testE == endTest){
                         temp = codeLineStart;
                         break;
                     }
                     if(testE[testE.length()-1] == '{'){
-                        iExecute(testE);
-                        ifExeptiom forIf;
-                        forIf.loop(intermediateB2);
+                        b = iExecute(testE);
+                        forIf.loop(!(b));
+                        codeLineStart = currentLineG;
                         intermediateB1 =false;
                         intermediateB2 =false;
-                        codeLineStart = currentLineG;
-                        cout<<codeLineStart;
-                        continue;
                     }
-                    callBlocks(codeLineStart);
-                    codeLineStart+=2;
+                    else{
+                        callBlocks(codeLineStart);
+                        codeLineStart+=2;
+                    }
                 }
             }
             currentLineG = temp+2;
-            intermediateB = false;
-            isLoop = false;
         }
 };
 int fExecute(string data){
@@ -716,11 +719,12 @@ int main(){
             currentLineG = i;
             int temp = fExecute(intermediateS);
             i = currentLineG-2;
+            intermediateB = false;
         }
         if(intermediateB1){ 
             currentLineG = i;
             loopExecute loopif;
-            loopif.loop(0, 1, 1, "oiuoiuoiuhhh", true, false);
+            loopif.loop(0, 1, 1, "", true, false);
             i = currentLineG-2;
             intermediateB1 =false;
         }
